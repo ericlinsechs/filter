@@ -7,5 +7,8 @@ all:
 check:
 	@check50 cs50/problems/2023/x/filter/more
 
+clang:
+	clang-format -i helpers.c
+
 clean:
 	rm $(EXEC)
