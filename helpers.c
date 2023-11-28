@@ -20,9 +20,22 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
+void swap(RGBTRIPLE *p1, RGBTRIPLE *p2)
+{
+    RGBTRIPLE tmp_p = *p1;
+    *p1 = *p2;
+    *p2 = tmp_p;
+}
+
 // Reflect image horizontally
 void reflect(int height, int width, RGBTRIPLE image[height][width])
 {
+    int mid = round((float) width / 2);
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < mid; j++)
+            swap(&image[i][j], &image[i][width - 1 - j]);
+    }
     return;
 }
 
