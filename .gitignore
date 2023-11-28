@@ -1,2 +1,4 @@
 filter
+*.bmp
+*.sh
 *.dSYM
