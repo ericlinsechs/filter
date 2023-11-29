@@ -10,6 +10,7 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
     // Change all black pixels to a color of your choosing
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
+            // Calculate the average intensity value for the pixel
             int sum = image[i][j].rgbtRed + image[i][j].rgbtGreen +
                       image[i][j].rgbtBlue;
 
@@ -37,6 +38,7 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < mid; j++)
+            // Swap pixels on the left with pixels on the right
             swap(&image[i][j], &image[i][width - 1 - j]);
     }
     return;
@@ -54,6 +56,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
             int sum_b = 0;
             unsigned int cnt = 0;
 
+            // Iterate through the neighboring pixels for the blur operation
             for (int x = i - 1; x <= (i + 1); x++) {
                 if (x < 0 || x >= height)
                     continue;
@@ -67,6 +70,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
                 }
             }
 
+            // Calculate the average RGB values
             tmp_img[i][j].rgbtRed = round((float) sum_r / cnt);
             tmp_img[i][j].rgbtGreen = round((float) sum_g / cnt);
             tmp_img[i][j].rgbtBlue = round((float) sum_b / cnt);
@@ -78,6 +82,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
+// Perform convolution at a given pixel position
 int *convolution(const int height,
                  const int width,
                  const int col,
@@ -90,16 +95,18 @@ int *convolution(const int height,
         return NULL;
 
     // Initialize the sum values
-    sum[0] = 0; // Red
-    sum[1] = 0; // Green
-    sum[2] = 0; // Blue
+    sum[0] = 0;  // Red
+    sum[1] = 0;  // Green
+    sum[2] = 0;  // Blue
 
+    // Iterate through the kernel and accumulate the sum
     for (int x = col - 1, kx = 0; kx <= 2 && x < height; x++, kx++) {
         if (x < 0)
             continue;
         for (int y = row - 1, ky = 0; ky <= 2 && y < width; y++, ky++) {
             if (y < 0)
                 continue;
+            // Perform the convolution for each color channel
             sum[0] += image[x][y].rgbtRed * kernel[kx][ky];
             sum[1] += image[x][y].rgbtGreen * kernel[kx][ky];
             sum[2] += image[x][y].rgbtBlue * kernel[kx][ky];
@@ -109,9 +116,11 @@ int *convolution(const int height,
     return sum;
 }
 
+// Combine gx and gy to obtain a gradient value
 BYTE combine(int gx, int gy)
 {
     unsigned long gradient = (unsigned long) round(sqrt(gx * gx + gy * gy));
+    // Ensure the gradient value is within the BYTE range
     if (gradient > 0xff)
         gradient = 0xff;
 
