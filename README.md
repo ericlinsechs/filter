@@ -33,5 +33,21 @@ For example:
 
     ./filter -g images/yard.bmp out.bmp
 
+## Example
+### Original
+<img src="./images/courtyard.bmp"  width=50% height=50%>
+
+### Grayscale Conversion
+<img src="./images_filter/courtyard_grayscale.bmp"  width=50% height=50%>
+
+### Horizontal Reflection
+<img src="./images_filter/courtyard_reflection.bmp"  width=50% height=50%>
+
+### Image Blurring
+<img src="./images_filter/courtyard_blur.bmp"  width=50% height=50%>
+
+### Edge Detection
+<img src="./images_filter/courtyard_edges.bmp"  width=50% height=50%>
+
 ## Reference
 The source code for this project is based on the [Harvard University’s CS50 course](https://cs50.harvard.edu/x/2023/). You can find the original source code and problem description from the ["Filter (More)" problem set](https://cs50.harvard.edu/x/2023/psets/4/filter/more).
