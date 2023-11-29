@@ -89,6 +89,11 @@ int *convolution(const int height,
     if (!sum)
         return NULL;
 
+    // Initialize the sum values
+    sum[0] = 0; // Red
+    sum[1] = 0; // Green
+    sum[2] = 0; // Blue
+
     for (int x = col - 1, kx = 0; kx <= 2 && x < height; x++, kx++) {
         if (x < 0)
             continue;
