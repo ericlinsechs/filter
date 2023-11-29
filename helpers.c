@@ -1,5 +1,7 @@
 #include "helpers.h"
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Convert image to grayscale
@@ -76,8 +78,65 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
-// Detect edges
+int *convolution(const int height,
+                 const int width,
+                 const int col,
+                 const int row,
+                 const int kernel[3][3],
+                 RGBTRIPLE image[height][width])
+{
+    int *sum = malloc(sizeof(int) * 3);
+    if (!sum)
+        return NULL;
+
+    for (int x = col - 1, kx = 0; kx <= 2 && x < height; x++, kx++) {
+        if (x < 0)
+            continue;
+        for (int y = row - 1, ky = 0; ky <= 2 && y < width; y++, ky++) {
+            if (y < 0)
+                continue;
+            sum[0] += image[x][y].rgbtRed * kernel[kx][ky];
+            sum[1] += image[x][y].rgbtGreen * kernel[kx][ky];
+            sum[2] += image[x][y].rgbtBlue * kernel[kx][ky];
+        }
+    }
+
+    return sum;
+}
+
+BYTE combine(int gx, int gy)
+{
+    unsigned long gradient = (unsigned long) round(sqrt(gx * gx + gy * gy));
+    if (gradient > 0xff)
+        gradient = 0xff;
+
+    return (BYTE) gradient;
+}
+
 void edges(int height, int width, RGBTRIPLE image[height][width])
 {
+    // Define Sobel kernels
+    int mx[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    int my[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
+
+    RGBTRIPLE tmp_img[height][width];
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            int *gx, *gy;
+            gx = convolution(height, width, i, j, mx, image);
+            gy = convolution(height, width, i, j, my, image);
+
+            tmp_img[i][j].rgbtRed = combine(gx[0], gy[0]);
+            tmp_img[i][j].rgbtGreen = combine(gx[1], gy[1]);
+            tmp_img[i][j].rgbtBlue = combine(gx[2], gy[2]);
+
+            free(gx);
+            free(gy);
+        }
+    }
+
+    memcpy(image, tmp_img, sizeof(RGBTRIPLE) * height * width);
+
     return;
 }
